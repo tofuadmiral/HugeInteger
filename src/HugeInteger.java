@@ -1,231 +1,381 @@
-/*
-    Ahmed Fuad Ali
-    L02
-    January 29th, 2018
-    alia78
-    400075937
-    Lab 1
- */
-
 import java.util.Random;
 
-// class to represent an integer that is larger than the type we can represent with our current capabilities in Java
-// arbitrarily large i.e. as large as "n"
-public class HugeInteger {
+public class HugeInteger{
+    public int[] array;
 
-    // Private Instance fields_______________________________________________________________________________________
-    private int values[];
-    private int numDigits;
-    private  boolean isNegative;
-    final static int MAXNUMINTS = 35;
+    //CONSTRUCTOR 1: make a huge integer from a string
+    public HugeInteger(String val){
 
-    // _____________________________ CONSTRUCTORS _____________________________
+        // check if it's negative first
+        if(val.charAt(0)=='-'){
 
-    public HugeInteger(String val) throws IllegalArgumentException{
-        // Create an integer that has the same value as the string that the user inputs
-        // val string has an optional minus sign at the beginning and other than that all characters are digits
-
-        // Check if it's negative
-        if ((int)val.charAt(0) == (int)'-') {
-            isNegative = true; // set to a negative integer
+            int leadingzero=0;
+            while(val.charAt(leadingzero+1)=='0'){
+                // eliminate leading zeros
+                leadingzero++;
+            }
+            array= new int[val.length()-leadingzero];
+            array[0]=11;
+            for(int i=1; i < val.length()-leadingzero; i++){
+                array[i]=val.charAt(i+leadingzero)-48; //Converts from ASCII to actual integer value
+            }
         }
-        else {
-            isNegative = false;
-        } // end else
-
-        // Find how many digits long the number is
-        numDigits = isNegative ? val.length()-1:val.length(); // if negative, numDigits is less than the length
-        values = new int[numDigits];
-
-        // Initialize the new array of digits
-        short digits[] = new short[numDigits]; // initialize the new array
-
-        // read the string into the digits of the array
-        int n = isNegative ? 1:0; // if it's negative, skip the first element
-
-        // iterate through the string, read most significant digit into first pos of array, etc.
-        for (int i = 0; i < val.length(); i++){
-            if ((int)val.charAt(i)<48 || (int)val.charAt(i)>57)
-                throw new IllegalArgumentException("That isn't an integer. Try again next time");
-            this.values[i] = Integer.parseInt("" + val.charAt(val.length()-1-i)); // convert the character into a string and then an int
-        } // end for
-
-    } // end HugeInteger
-
-    public HugeInteger(int n){
-        // create a huge integer that is random and has n digits, n is from the user
-        this.numDigits=n;
-        values = new int[n];
-        // Generate a random number and populate the array with them
-        Random rand = new Random();
-        for (int i = 0; i < n; i++){
-            this.values[i] = rand.nextInt(10);
-        } // end for
-    } // end HugeInteger
-
-    // _____________________________ OPERATIONS _____________________________
-
-    public HugeInteger add(HugeInteger h){
-        // initialize a new big integer
-        HugeInteger addedInt = new HugeInteger(0);
-
-        // case of both positive
-
-        if(!this.isNegative && !h.isNegative){
-            // check which integer is bigger
-            int isthisbigger = 0;
-            int smallerDigits = 0;
-            int largerDigits = 0;
-            int carry = 0;
-
-            if (this.numDigits > h.numDigits){
-                isthisbigger = 1;
-                smallerDigits = h.numDigits;
-                largerDigits = this.numDigits;
-            } else if (this.numDigits<h.numDigits){
-                isthisbigger = 0;
-                smallerDigits = this.numDigits;
-                largerDigits = h.numDigits;
-            }
-            else{
-                isthisbigger = 2;
-                smallerDigits = this.numDigits;
-                largerDigits = this.numDigits;
+        else
+        {
+            int leadingzero=0;
+            while(val.charAt(leadingzero)=='0'){
+                // get rid of the leading zeros
+                leadingzero++;
             }
 
-            // initialize array of new integer
-            addedInt.values = new int[largerDigits+1]; // +1 in case there's an end carry
-            addedInt.numDigits = largerDigits+1;
+            // now allocate space
+            array= new int[val.length()+1-leadingzero];
+
+            // by convention, 10 will be a positive number, 11 is a negative
+            array[0]=10;
+
+            // read in values using ascii
+            for (int i = 0; i < val.length()-leadingzero; i++){
+                array[i+1]=val.charAt(i+leadingzero)-48;
+            }
+        }
+    }
 
 
-            // now iterate over the smaller number and add things up
-            for (int i = 0; i <= smallerDigits-1; i++){
-                addedInt.values[i] = (carry + this.values[i] + h.values[i])%10; // only add the ones digit
-                carry = (carry + this.values[i] + h.values[i])/10; // update the carry for the next addition
-            } // end for
+    //CONSTRUCTOR 2: Random "n" Digit Number
+    public HugeInteger(int n)
+    {
+        array= new int[n+1];
+        array[0]=10;
+        array[1] = new Random().nextInt(9) + 1; // Random from 1-9
+        for(int i=2;i<n+1;i++)
+        {
+            array[i]= new Random().nextInt(10);
+        }
+    }
 
-            // now iterate over larger number and add, but to do that check which is larger
-            if (isthisbigger ==1){
-                for (int i = smallerDigits; i<=largerDigits-1; i++){
-                    addedInt.values[i] = (carry + this.values[i])%10;
-                    carry = (carry + this.values[i])/10; // update the carry for the next addition
-                } // end for
-            } else { // this means that h is bigger so iterate over that
-                for (int i = smallerDigits; i<= largerDigits-1; i++){
-                    addedInt.values[i] = (carry + h.values[i])%10;
-                    carry = (carry + h.values[i])/10; // update the carry for the next addition
+    //METHOD 1: ADD Huge Integers
+    public HugeInteger add(HugeInteger h)
+    {
+        if((this.array[0]==10 && h.array[0]==10) || (this.array[0]==11 && h.array[0]==11)) //Use ADD method if same sign; Substract Otherwise
+        {
+            int hi_digits, lo_digits; //Determines digits of each HugeInt
+            if (this.array.length >= h.array.length) //Case 'this' HugeInteger is Larger
+            {
+                hi_digits= this.array.length -1;
+                lo_digits= h.array.length -1;
+                HugeInteger sum = new HugeInteger(hi_digits + 1); //Extra digit allocated in case of final carryover
+                int carryover=0,i; //Create variables for i to iterate and carryover to store varry over values
+                for(i=lo_digits;i>=1;i--) //Iterates sum from least sig to most sig digit of smaller number
+                {
+                    carryover=this.array[i+(hi_digits-lo_digits)]+h.array[i]+carryover; //Stores sum, including carryover bit
+                    sum.array[i+(hi_digits-lo_digits)+1]=carryover%10; //Stores ones digit result of sum
+                    carryover/=10; //Stores tens digit of result of sum, if none then will = 0
                 }
+                for(i=hi_digits-lo_digits;i>=1;i--) //Iterates for number of digits large number has more than smaller #
+                {
+                    carryover=this.array[i]+carryover;
+                    sum.array[i+1]=carryover%10;
+                    carryover/=10;
+                }
+                sum.array[0]=this.array[0]; //Stores 11 if both neg or 10 if both pos
+                if(carryover==0) //Reduce size of HugeInt array to fit sum
+                {
+                    HugeInteger newSum= new HugeInteger(hi_digits);
+                    newSum.array[0]=sum.array[0];
+                    for(i=1;i<=hi_digits;i++)
+                    {
+                        newSum.array[i]=sum.array[i+1];
+                    }
+                    return newSum;
+                }
+                sum.array[1]=carryover; //Sign equals the sign of the 2 numbers added together
+                return sum;
+            }
+            else //Other case: integer 'h' is larger than 'this'. Same exact algorithm and implementation as above.
+            {
+                hi_digits= h.array.length -1;
+                lo_digits=this.array.length -1;
+                HugeInteger sum = new HugeInteger(hi_digits + 1);
+                int carryover=0,i;
+                for(i=lo_digits;i>=1;i--)
+                {
+                    carryover=h.array[i+(hi_digits-lo_digits)]+this.array[i]+carryover;
+                    sum.array[i+(hi_digits-lo_digits)+1]=carryover%10;
+                    carryover/=10;
+                }
+                for(i=hi_digits-lo_digits;i>=1;i--)
+                {
+                    carryover=h.array[i]+carryover;
+                    sum.array[i+1]=carryover%10;
+                    carryover/=10;
+                }
+                sum.array[1]=carryover;
+                sum.array[0]=this.array[0];
+                if(carryover==0)
+                {
+                    HugeInteger newSum= new HugeInteger(hi_digits);
+                    newSum.array[0]=sum.array[0];
+                    for(i=1;i<=hi_digits;i++)
+                    {
+                        newSum.array[i]=sum.array[i+1];
+                    }
+                    return newSum;
+                }
+                sum.array[1]=carryover;
+                return sum;
             }
 
-            // check for an end carry
-            if (carry ==1){
-                addedInt.values[largerDigits] = 1;
-                addedInt.numDigits = largerDigits + 1;
-            } else {
-                addedInt.values[largerDigits] =0;
-                addedInt.numDigits = largerDigits;
+        }
+        else //Case that one integer is postive and another negative
+        {
+            if(this.array[0]==11) //Case: this integer is negative
+            {
+                this.array[0]=10; //Change sign to positive and substract
+                return h.substract(this);
             }
+            else if(h.array[0]==11) //Case: h integer is negative
+            {
+                h.array[0]=10; //Change to positive and substract
+                return this.substract(h);
+            }
+            else
+                return this;
         }
 
-        // case this positive h negative
+    }
 
-        if (!this.isNegative && h.isNegative){
+    //METHOD 2: SUBSTRACT HugeIntegers
+    public HugeInteger substract(HugeInteger h)
+    {
+        if(this.array[0]==10 && h.array[0]==10) //CASE 0: POS - POS
+        {
+            //Substraction Block
+            if(this.compareTo(h)==0)
+            {
+                return new HugeInteger("0"); //Return Huge Integer of 0 if both numbers size is equal.
+            }
+            else if(this.compareTo(h)==1) //Normal Case, top number is larger than lower number (this is larger than h)
+            {
+                //Normal substraction
+                int digitdiff= this.array.length-h.array.length; //Difference in number of digits between both numbers
+                HugeInteger diffR= new HugeInteger(this.array.length-1); //Create new HugeInteger of equal size to this, adjust accordingly after
+                diffR.array[0]=10; //Already know substraction will lead to a positive number
+                for(int i=h.array.length-1;i>=1;i--) //h[i], this[i+digitdiff], diffR[i+digitdiff]
+                {
+                    if(h.array[i]>this.array[i+digitdiff])
+                    {
+                        //Borrowing Block, rearrange values to allow for substraction: End result: Modify more significant values
+                        int counter=1; //Counts how many digits involved in borrowing process eg. 1001-2, 3 digits involved in borrowing, all 2 0's and the least sig 1
+                        while(this.array[i+digitdiff-counter]==0)
+                        {
+                            this.array[i+digitdiff-counter]=9; //After borrowing process this digit will ultimately become 9 (10, then 1  borrowed to lead to 9)
+                            counter++;
+                        }
+                        this.array[i+digitdiff-counter]-=1; //Substract 1 from non zero more significant digit
+                        this.array[i+digitdiff]+=10; //Increase digit by 10 to allow for borrowing process to be complete
+
+                    }
+                    diffR.array[i+digitdiff]=this.array[i+digitdiff]-h.array[i]; //Normal no borrowing needed;
+                }
+                //For loop to iterate through remaining digits
+                for(int i=this.array.length-h.array.length;i>=1;i--)
+                {
+                    diffR.array[i]=this.array[i];
+                }
+
+                //BLOCK for reducing zeros in most significant bit
+                if(diffR.array[1]==0)
+                {
+                    int zeros = 1;
+                    while (diffR.array[1 + zeros] == 1) {
+                        zeros++; //Counts total zeros in most significant bit
+                    }
+                    HugeInteger updatedDiffR = new HugeInteger(diffR.toString());
+                    return updatedDiffR;
+                }
+                return diffR;
+
+            }
+            else
+            {
+                //Negative/Reverse substraction
+                int digitdiff= h.array.length-this.array.length;
+                HugeInteger diffR= new HugeInteger(h.array.length-1);
+                diffR.array[0]=11;
+                for(int i=this.array.length-1;i>=1;i--){ //h[i], this[i+digitdiff], diffR[i+digitdiff]
+                
+                    if(this.array[i]>h.array[i+digitdiff]){
+                    
+                        //Borrowing Block, rearrange values to allow for substraction: End result: Modify more significant values
+                        int counter=1; //Counts how many digits involved in borrowing process eg. 1001-2, 3 digits involved in borrowing, all 2 0's and the least sig 1
+                        while(h.array[i+digitdiff-counter]==0)
+                        {
+                            h.array[i+digitdiff-counter]=9; //After borrowing process this digit will ultimately become 9 (10, then 1  borrowed to lead to 9)
+                            counter++;
+                        }
+                        h.array[i+digitdiff-counter]-=1; //Substract 1 from non zero more significant digit
+                        h.array[i+digitdiff]+=10; //Increase digit by 10 to allow for borrowing process to be complete
+
+                    }
+                    diffR.array[i+digitdiff]=h.array[i+digitdiff]-this.array[i]; //Normal no borrowing needed;
+                }
+                //For loop to iterate through remaining digits
+                for(int i=h.array.length-this.array.length;i>=1;i--)
+                {
+                    diffR.array[i]=h.array[i];
+                }
+                //BLOCK for reducing zeros in most significant bit
+                if(diffR.array[1]==0)
+                {
+                    int zeros = 1;
+                    while (diffR.array[1 + zeros] == 0) {
+                        zeros++; //Counts total zeros in most significant bit
+                    }
+                    HugeInteger updatedDiffR = new HugeInteger(diffR.toString());
+                    return updatedDiffR;
+                }
+                return diffR;
+            }
 
 
         }
-
-        return addedInt;
-
-    } // end add
-
-    public HugeInteger subtract(HugeInteger h){
-        // return a huge integer that is the subtraction of this and h
-
-        // case this isn't negative and the other is, therefore we're adding the second
-
-        if(!this.isNegative && h.isNegative){
-            h.isNegative = false;
+        else if(this.array[0]==10 && h.array[0]==11) //CASE 1: POS - NEG
+        {
+            h.array[0]=10; //Converted to POS + POS
             return this.add(h);
         }
+        else if(this.array[0]==11 && h.array[0]==10) //CASE 2: NEG - POS
+        {
+            h.array[0]=11; //Converted to NEG + NEG
+            return this.add(h);
+        }
+        else //CASE 3: NEG - NEG
+        {
+            h.array[0]=10; //Converted to NEG + POS > Switch order of substraction to POS - POS
+            this.array[0]=10;
+            return h.substract(this);
+        }
+    }
 
-        // case this is negative, other is too
-        // thus effectively taking second number and subtracting from it THIS
+    public HugeInteger multiply(HugeInteger h)
+    {
+        //The following algorithm determines number of digits of product. Number of Digits for product of integers A and B: = log10(A)+log10(B)+1
+        //Given this, cannot find exact size of product due to length of numbers. Therefore, both numbers will be rounded for purpose of estimation. Round up to extra array space incase
+        // eg. if 1580x840 >> Round to 2000 and 1000 >> 2000x1000 >> 2*10^3 + 1*10^3 # Digits= log10(2)+3*log10(10) + log10(1)+3*log10(10) = log10(2) + 3 + log10(1) + 3
+        int digits=1; //Use : Math.log10(x)
+        int sigbit1=this.array[1]+1;
+        int sigbit2=h.array[1]+1;
+        //exponent is equal to length of each HugeInt-2
+        digits+= ( Math.log10(sigbit1)+ (this.array.length-2) + Math.log10(sigbit2) + (h.array.length-2) );
+        HugeInteger prodInt = new HugeInteger(digits);
 
-        if(this.isNegative && h.isNegative){
-            return h.subtract(this);
+        if(this.array[0]==h.array[0]){
+            // if both signs the same, then that means it's a positive number +*+ or -*- = +
+            prodInt.array[0]=10;
+        }
+        else {
+            // different signs means that the product must be negative
+            prodInt.array[0] = 11;
         }
 
-        // case this is negative, and other isn't
-        // i.e we're effectively adding them tgt
+        for(int z=1;z<prodInt.array.length;z++)
+            prodInt.array[z]=0;
+        //System.out.println(prodInt.toString()); //CHECK
+        HugeInteger BigNum = this.compareTo(h)>=0 ? this : h;
+        HugeInteger SmolNum = this.compareTo(h)>=0 ? h : this;
+        //System.out.println("Smaller is " + SmolNum + " and bigger is " + BigNum); //CHECK
 
-        if(this.isNegative && !h.isNegative){
-            HugeInteger temp = new HugeInteger();
-            temp = this;
-            temp.isNegative = false;
-            // since taking more away from negative
-            temp = temp.add(h);
-            temp.isNegative = true;
-            return temp;
-        }
+        //For loop multiplying smaller integer to larger integer from least significant bit to most significant bit
+        for(int i = SmolNum.array.length-1; i>=1;i--){//Iterates for each digit of smaller number to multiply to bigger number
 
-        return new HugeInteger(3);
-
-
-    } // end subtract()
-
-    public HugeInteger multiply(HugeInteger h){
-        // Multiply two huge integers and return a huge integer
-        return new HugeInteger(3);
-    } // end multiply
-
-    public int compareTo(HugeInteger h){
-        // compare two huge integers, this and h, 0 means equal, 1 means this is larger, -1 means h is larger
-        if(this.numDigits>h.numDigits) {
-            if(this.isNegative){
-                // then this must be smaller bc negative and more digits so more negative either way
-                return -1;
-            }
-            else{
-                // must be bigger bc more digits and not negative
-                return 1;
+            // now let's append at k
+            int k = i + prodInt.array.length - SmolNum.array.length;
+            for (int j = BigNum.array.length - 1; j >= 1; j--) {
+                int val = SmolNum.array[i] * BigNum.array[j]; 
+                prodInt.array[k] += val % 10;
+                val = val / 10;
+                prodInt.array[k - 1] += val;
+                k--;
             }
         }
-        else if(this.numDigits<h.numDigits){
-            // that means h has more digits
-            if (h.isNegative){
-                return 1; // more digits and negative so must be smaller
+        for(int m=prodInt.array.length-1;m>=1;m--)
+        {
+            if(prodInt.array[m]>9)
+            {
+                int carry= prodInt.array[m];
+                prodInt.array[m]=prodInt.array[m]%10;
+                prodInt.array[m-1]+=(carry/10);
             }
-            else{
-                return -1; // h more digits but not negative so must be larger
+        }
+        if(prodInt.array[1]==0){
+            int zeros = 1;
+            while (prodInt.array[1 + zeros] == 1) {
+                zeros++; //Counts total zeros in most significant bit
             }
+            HugeInteger updatedProd = new HugeInteger(prodInt.toString());
+            return updatedProd;
+        }
+        return prodInt;
+        //Within loop, multiply and add each segment into produced prodArray
+        //After adding is complete, perform carryover for indexes exceeding size of 9 (eg. if one sum index holds 81, transfer 8 to next one, and then onwards..)
+        //Final sum created >> Resize array to be appropriate size
+        //Convert array to string
+        //String to HugeInteger
+    }
+
+
+    public int compareTo(HugeInteger h)
+    {
+        int negA=this.array[0];
+        int negB=h.array[0];
+        int digA=this.array.length;
+        int digB=h.array.length;
+        if((negA==11 && negB==10) || (negA==11 && negB==11 && digA>digB) || (negA==10 && negB==10 && digB>digA) ){ //Case: this is smaller #
+
+            return -1;
+        }
+        else if((negA==10 && negB==11) || (negA==11 && negB==11 && digB>digA) || (negA==10 && negB==10 && digA>digB) ){
+            return 1;
+        }
+        else if((negA==negB) && this.toString()==h.toString()){
+            return 0;
         }
         else{
-            // equal digits
-            if(h.isNegative && !this.isNegative){
-                // same digits but h is negative therefore this bigger
-                return 1;
-            }
-            else if (!h.isNegative && this.isNegative) {
-                // same digits but this is negative so H must be smaller
-                return -1;
+            for(int i=1;i<digA;i++){
+                if(this.array[i]>h.array[i]){
+                    if(negA==10){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+                }
+                else if(this.array[i]<h.array[i]){
+                    if(negA==10){
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
             }
         }
+        return 0;
+    }
 
-    } // end compareTo
 
+    // return a string representation of this HugeInteger
     public String toString(){
-        // make this a string
-        String hugeIntStr = "";
-        // iterate backwards through the list
-        int i = (this.numDigits-1); // start at the end
-        while(values[i] == 0){ // check for leading zeros
-            i--; // keep going through until you're not at a zero
-        } // end while
-        while(i>= 0){
-            hugeIntStr = hugeIntStr + Integer.toString(this.values[i]);
-            i--;
-        } // end while
-        return hugeIntStr;
-    } // end toString
+        String str="";
+        if(this.array[0]==11)
+            str+="-";
+        for(int i=1;i<this.array.length;i++)
+        {
+            str+=this.array[i];
+        }
+        //System.out.println(str);
+        return str;
+    }
 }
 
