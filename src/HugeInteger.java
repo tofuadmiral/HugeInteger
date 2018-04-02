@@ -69,58 +69,69 @@ public class HugeInteger {
         // initialize a new big integer
         HugeInteger addedInt = new HugeInteger(0);
 
-        // check which integer is bigger
-        int isthisbigger = 0;
-        int smallerDigits = 0;
-        int largerDigits = 0;
-        int carry = 0;
+        // case of both positive
 
-        if (this.numDigits > h.numDigits){
-            isthisbigger = 1;
-            smallerDigits = h.numDigits;
-            largerDigits = this.numDigits;
-        } else if (this.numDigits<h.numDigits){
-            isthisbigger = 0;
-            smallerDigits = this.numDigits;
-            largerDigits = h.numDigits;
-        }
-        else{
-            isthisbigger = 2;
-            smallerDigits = this.numDigits;
-            largerDigits = this.numDigits;
-        }
+        if(!this.isNegative && !h.isNegative){
+            // check which integer is bigger
+            int isthisbigger = 0;
+            int smallerDigits = 0;
+            int largerDigits = 0;
+            int carry = 0;
 
-        // initialize array of new integer
-        addedInt.values = new int[largerDigits+1]; // +1 in case there's an end carry
-        addedInt.numDigits = largerDigits+1;
+            if (this.numDigits > h.numDigits){
+                isthisbigger = 1;
+                smallerDigits = h.numDigits;
+                largerDigits = this.numDigits;
+            } else if (this.numDigits<h.numDigits){
+                isthisbigger = 0;
+                smallerDigits = this.numDigits;
+                largerDigits = h.numDigits;
+            }
+            else{
+                isthisbigger = 2;
+                smallerDigits = this.numDigits;
+                largerDigits = this.numDigits;
+            }
+
+            // initialize array of new integer
+            addedInt.values = new int[largerDigits+1]; // +1 in case there's an end carry
+            addedInt.numDigits = largerDigits+1;
 
 
-        // now iterate over the smaller number and add things up
-        for (int i = 0; i <= smallerDigits-1; i++){
-            addedInt.values[i] = (carry + this.values[i] + h.values[i])%10; // only add the ones digit
-            carry = (carry + this.values[i] + h.values[i])/10; // update the carry for the next addition
-        } // end for
-
-        // now iterate over larger number and add, but to do that check which is larger
-        if (isthisbigger ==1){
-            for (int i = smallerDigits; i<=largerDigits-1; i++){
-                addedInt.values[i] = (carry + this.values[i])%10;
-                carry = (carry + this.values[i])/10; // update the carry for the next addition
+            // now iterate over the smaller number and add things up
+            for (int i = 0; i <= smallerDigits-1; i++){
+                addedInt.values[i] = (carry + this.values[i] + h.values[i])%10; // only add the ones digit
+                carry = (carry + this.values[i] + h.values[i])/10; // update the carry for the next addition
             } // end for
-        } else { // this means that h is bigger so iterate over that
-            for (int i = smallerDigits; i<= largerDigits-1; i++){
-                addedInt.values[i] = (carry + h.values[i])%10;
-                carry = (carry + h.values[i])/10; // update the carry for the next addition
+
+            // now iterate over larger number and add, but to do that check which is larger
+            if (isthisbigger ==1){
+                for (int i = smallerDigits; i<=largerDigits-1; i++){
+                    addedInt.values[i] = (carry + this.values[i])%10;
+                    carry = (carry + this.values[i])/10; // update the carry for the next addition
+                } // end for
+            } else { // this means that h is bigger so iterate over that
+                for (int i = smallerDigits; i<= largerDigits-1; i++){
+                    addedInt.values[i] = (carry + h.values[i])%10;
+                    carry = (carry + h.values[i])/10; // update the carry for the next addition
+                }
+            }
+
+            // check for an end carry
+            if (carry ==1){
+                addedInt.values[largerDigits] = 1;
+                addedInt.numDigits = largerDigits + 1;
+            } else {
+                addedInt.values[largerDigits] =0;
+                addedInt.numDigits = largerDigits;
             }
         }
 
-        // check for an end carry
-        if (carry ==1){
-            addedInt.values[largerDigits] = 1;
-            addedInt.numDigits = largerDigits + 1;
-        } else {
-            addedInt.values[largerDigits] =0;
-            addedInt.numDigits = largerDigits;
+        // case this positive h negative
+
+        if (!this.isNegative && h.isNegative){
+
+
         }
 
         return addedInt;
@@ -129,7 +140,19 @@ public class HugeInteger {
 
     public HugeInteger subtract(HugeInteger h){
         // return a huge integer that is the subtraction of this and h
+
+        // case this isn't negative and the other is, therefore we're adding the second
+
+        if(!this.isNegative && h.isNegative){
+            h.isNegative = false;
+            return this.add(h);
+        }
+
+        // case this isn't negative but other is
+
         return new HugeInteger(3);
+
+
     } // end subtract()
 
     public HugeInteger multiply(HugeInteger h){
