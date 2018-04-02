@@ -342,17 +342,15 @@ public class HugeInteger{
                     if(aisnegative==10){
                         return 1;
                     }
-                    else{
+                    else
                         return -1;
-                    }
                 }
                 else if(this.array[i]<h.array[i]){
                     if(aisnegative==10){
                         return -1;
                     }
-                    else{
+                    else
                         return 1;
-                    }
                 }
             }
         }
