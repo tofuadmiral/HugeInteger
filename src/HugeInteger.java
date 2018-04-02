@@ -150,7 +150,8 @@ public class HugeInteger{
     // subtract two huge integers and return the huge integer that is the result
     public HugeInteger subtract(HugeInteger h)
     {
-        if(this.array[0]==10 && h.array[0]==10) //CASE 0: POS - POS
+        // positive minus another positive
+        if(this.array[0]==10 && h.array[0]==10)
         {
             if(this.compareTo(h)==0){
                 // if both same, return 0
@@ -208,14 +209,14 @@ public class HugeInteger{
                 for(int i=this.array.length-1;i>=1;i--){
                 
                     if(this.array[i]>h.array[i+digitdiff]){
-                        // this mean's that we need to borrow
+                        // this means that we need to borrow
                         int counter=1;{
                             // same as before, count number needed to implement
                             h.array[i+digitdiff-counter]=9;
                             counter++;
                         }
                         h.array[i+digitdiff-counter]-=1;
-                        // last digit needs to be incremented if there is an end borroq
+                        // last digit needs to be incremented if there is an end borrow
                         h.array[i+digitdiff]+=10;
 
                     }
@@ -368,7 +369,6 @@ public class HugeInteger{
         {
             stringrepresentation+=this.array[i];
         }
-        //System.out.println(stringrepresentation);
         return stringrepresentation;
     }
 }

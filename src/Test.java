@@ -3,47 +3,47 @@ public class Test
 {
     public static void main(String args[])
     {
-        HugeInteger A= new HugeInteger("46");
-        HugeInteger B= new HugeInteger("55");
-        HugeInteger C= new HugeInteger("-10");
-        HugeInteger D= new HugeInteger("-7");
+        HugeInteger int1= new HugeInteger("46");
+        HugeInteger int2= new HugeInteger("55");
+        HugeInteger int3= new HugeInteger("-10");
+        HugeInteger int4= new HugeInteger("-7");
 
-        System.out.println(A.toString()+ " + " + B.toString() + " = " + A.add(B).toString());
-        System.out.println(B.toString()+" + " + A.toString() + " = " + B.add(A).toString());
-        System.out.println(C.toString()+" + " + A.toString()+ " = " + C.add(A).toString());
-        System.out.println(D.toString()+" + " + A.toString() +" = " + D.add(A).toString());
+        System.out.println(int1.toString()+ " + " + int2.toString() + " = " + int1.add(int2).toString());
+        System.out.println(int2.toString()+" + " + int1.toString() + " = " + int2.add(int1).toString());
+        System.out.println(int3.toString()+" + " + int1.toString()+ " = " + int3.add(int1).toString());
+        System.out.println(int4.toString()+" + " + int1.toString() +" = " + int4.add(int1).toString());
 
-        A=  new HugeInteger("146");
-        B=  new HugeInteger("9");
-        C=  new HugeInteger("-10");
-        D=  new HugeInteger("-7");
+        int1=  new HugeInteger("146");
+        int2=  new HugeInteger("9");
+        int3=  new HugeInteger("-10");
+        int4=  new HugeInteger("-7");
 
 
-        System.out.println(A.toString()+" - " + B.toString()+ " = " + A.subtract(B).toString());
-        A=  new HugeInteger("146");
-        B=  new HugeInteger("9");
-        C=  new HugeInteger("-10");
-        D=  new HugeInteger("-7");
-        System.out.println(B.toString()+" - " + A.toString()+ " = " + B.subtract(A).toString());
-        A=  new HugeInteger("146");
-        B=  new HugeInteger("9");
-        C=  new HugeInteger("-10");
-        D=  new HugeInteger("-7");
-        System.out.println(C.toString()+" - " + A.toString()+ " = " + C.subtract(A).toString());
-        A=  new HugeInteger("6");
-        B=  new HugeInteger("9");
-        C=  new HugeInteger("-10");
-        D=  new HugeInteger("-7");
-        System.out.println(D.toString()+" - " + A.toString()+ " = " + D.subtract(A).toString());
+        System.out.println(int1.toString()+" - " + int2.toString()+ " = " + int1.subtract(int2).toString());
+        int1=  new HugeInteger("146");
+        int2=  new HugeInteger("9");
+        int3=  new HugeInteger("-10");
+        int4=  new HugeInteger("-7");
+        System.out.println(int2.toString()+" - " + int1.toString()+ " = " + int2.subtract(int1).toString());
+        int1=  new HugeInteger("146");
+        int2=  new HugeInteger("9");
+        int3=  new HugeInteger("-10");
+        int4=  new HugeInteger("-7");
+        System.out.println(int3.toString()+" - " + int1.toString()+ " = " + int3.subtract(int1).toString());
+        int1=  new HugeInteger("6");
+        int2=  new HugeInteger("9");
+        int3=  new HugeInteger("-10");
+        int4=  new HugeInteger("-7");
+        System.out.println(int4.toString()+" - " + int1.toString()+ " = " + int4.subtract(int1).toString());
 
-        A=  new HugeInteger("146");
-        B=  new HugeInteger("10");
-        C=  new HugeInteger("-10");
-        D=  new HugeInteger("-7");
+        int1=  new HugeInteger("146");
+        int2=  new HugeInteger("10");
+        int3=  new HugeInteger("-10");
+        int4=  new HugeInteger("-7");
 
-        System.out.println(A.toString()+" x " + B.toString()+ " = " + A.multiply(B).toString());
-        System.out.println(B.toString()+" x " + A.toString()+ " = " + B.multiply(A).toString());
-        System.out.println(C.toString()+" x " + A.toString()+ " = " + C.multiply(A).toString());
-        System.out.println(D.toString()+" x " + A.toString()+ " = " + D.multiply(A).toString());
+        System.out.println(int1.toString()+" x " + int2.toString()+ " = " + int1.multiply(int2).toString());
+        System.out.println(int2.toString()+" x " + int1.toString()+ " = " + int2.multiply(int1).toString());
+        System.out.println(int3.toString()+" x " + int1.toString()+ " = " + int3.multiply(int1).toString());
+        System.out.println(int4.toString()+" x " + int1.toString()+ " = " + int4.multiply(int1).toString());
     }
 }
