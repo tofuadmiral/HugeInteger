@@ -17,7 +17,23 @@ public class Main {
 
         num3 = num1.multiply(num2);
 
+
+
         System.out.println("\n multiplied: " + num3.toString());
+
+
+
+        HugeInteger num4 = new HugeInteger(2);
+        HugeInteger num5 = new HugeInteger("-3");
+        HugeInteger num6;
+
+        num6 = num4.subtract(num5);
+
+        System.out.println (" Number 4: " + num4.toString());
+        System.out.println (" Number 5: " + num5.toString());
+
+        System.out.println ("subtract 4 & 5: " + num6.toString());
+
 
         System.out.println("\n negative or positive: " + num3.array[0]);
 

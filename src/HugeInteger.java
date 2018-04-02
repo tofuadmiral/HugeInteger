@@ -17,7 +17,7 @@ public class HugeInteger{
             array= new int[val.length()-leadingzero];
             array[0]=11;
             for(int i=1; i < val.length()-leadingzero; i++){
-                array[i]=val.charAt(i+leadingzero)-48; //Converts from ASCII to actual integer value
+                array[i]=val.charAt(i+leadingzero)-48;
             }
         }
         else
@@ -32,9 +32,9 @@ public class HugeInteger{
             array= new int[val.length()+1-leadingzero];
 
             // by convention, 10 will be a positive number, 11 is a negative
-            array[0]=10;
+            array[0]=10; // this means a positive number
 
-            // read in values using ascii
+            // now get the values and put into the array
             for (int i = 0; i < val.length()-leadingzero; i++){
                 array[i+1]=val.charAt(i+leadingzero)-48;
             }
@@ -42,12 +42,13 @@ public class HugeInteger{
     }
 
 
-    //CONSTRUCTOR 2: Random "n" Digit Number
+    // constructor 2: random number with n digits
+
     public HugeInteger(int n)
     {
         array= new int[n+1];
         array[0]=10;
-        array[1] = new Random().nextInt(9) + 1; // Random from 1-9
+        array[1] = new Random().nextInt(9) + 1;
         for(int i=2;i<n+1;i++)
         {
             array[i]= new Random().nextInt(10);
@@ -131,13 +132,13 @@ public class HugeInteger{
         {
             if(this.array[0]==11) //Case: this integer is negative
             {
-                this.array[0]=10; //Change sign to positive and substract
-                return h.substract(this);
+                this.array[0]=10; //Change sign to positive and subtract
+                return h.subtract(this);
             }
             else if(h.array[0]==11) //Case: h integer is negative
             {
-                h.array[0]=10; //Change to positive and substract
-                return this.substract(h);
+                h.array[0]=10; //Change to positive and subtract
+                return this.subtract(h);
             }
             else
                 return this;
@@ -146,18 +147,17 @@ public class HugeInteger{
     }
 
     //METHOD 2: SUBSTRACT HugeIntegers
-    public HugeInteger substract(HugeInteger h)
+    public HugeInteger subtract(HugeInteger h)
     {
         if(this.array[0]==10 && h.array[0]==10) //CASE 0: POS - POS
         {
-            //Substraction Block
-            if(this.compareTo(h)==0)
-            {
-                return new HugeInteger("0"); //Return Huge Integer of 0 if both numbers size is equal.
+            if(this.compareTo(h)==0){
+                // if both same, return 0
+                return new HugeInteger("0");
             }
-            else if(this.compareTo(h)==1) //Normal Case, top number is larger than lower number (this is larger than h)
-            {
-                //Normal substraction
+            else if(this.compareTo(h)==1) {
+
+                // normal subtraction
                 int digitdiff= this.array.length-h.array.length; //Difference in number of digits between both numbers
                 HugeInteger diffR= new HugeInteger(this.array.length-1); //Create new HugeInteger of equal size to this, adjust accordingly after
                 diffR.array[0]=10; //Already know substraction will lead to a positive number
@@ -254,7 +254,7 @@ public class HugeInteger{
         {
             h.array[0]=10; //Converted to NEG + POS > Switch order of substraction to POS - POS
             this.array[0]=10;
-            return h.substract(this);
+            return h.subtract(this);
         }
     }
 
@@ -327,24 +327,25 @@ public class HugeInteger{
 
     public int compareTo(HugeInteger h)
     {
-        int negA=this.array[0];
-        int negB=h.array[0];
+        int aisnegative=this.array[0];
+        int bisnegative=h.array[0];
         int digA=this.array.length;
         int digB=h.array.length;
-        if((negA==11 && negB==10) || (negA==11 && negB==11 && digA>digB) || (negA==10 && negB==10 && digB>digA) ){ //Case: this is smaller #
+        // if this is smaller, these conditions must be met
+        if((aisnegative==11 && bisnegative==10) || (aisnegative==11 && bisnegative==11 && digA>digB) || (aisnegative==10 && bisnegative==10 && digB>digA) ){
 
             return -1;
         }
-        else if((negA==10 && negB==11) || (negA==11 && negB==11 && digB>digA) || (negA==10 && negB==10 && digA>digB) ){
+        else if((aisnegative==10 && bisnegative==11) || (aisnegative==11 && bisnegative==11 && digB>digA) || (aisnegative==10 && bisnegative==10 && digA>digB) ){
             return 1;
         }
-        else if((negA==negB) && this.toString()==h.toString()){
+        else if((aisnegative==bisnegative) && this.toString()==h.toString()){
             return 0;
         }
         else{
             for(int i=1;i<digA;i++){
                 if(this.array[i]>h.array[i]){
-                    if(negA==10){
+                    if(aisnegative==10){
                         return 1;
                     }
                     else{
@@ -352,7 +353,7 @@ public class HugeInteger{
                     }
                 }
                 else if(this.array[i]<h.array[i]){
-                    if(negA==10){
+                    if(aisnegative==10){
                         return -1;
                     }
                     else{
@@ -367,15 +368,15 @@ public class HugeInteger{
 
     // return a string representation of this HugeInteger
     public String toString(){
-        String str="";
+        String stringrepresentation="";
         if(this.array[0]==11)
-            str+="-";
+            stringrepresentation+="-";
         for(int i=1;i<this.array.length;i++)
         {
-            str+=this.array[i];
+            stringrepresentation+=this.array[i];
         }
-        //System.out.println(str);
-        return str;
+        //System.out.println(stringrepresentation);
+        return stringrepresentation;
     }
 }
 
