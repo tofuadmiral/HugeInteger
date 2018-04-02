@@ -20,8 +20,7 @@ public class HugeInteger{
                 array[i]=val.charAt(i+leadingzero)-48;
             }
         }
-        else
-        {
+        else{
             int leadingzero=0;
             while(val.charAt(leadingzero)=='0'){
                 // get rid of the leading zeros
@@ -373,4 +372,3 @@ public class HugeInteger{
         return stringrepresentation;
     }
 }
-
