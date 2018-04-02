@@ -58,54 +58,57 @@ public class HugeInteger{
     //METHOD 1: ADD Huge Integers
     public HugeInteger add(HugeInteger h)
     {
-        if((this.array[0]==10 && h.array[0]==10) || (this.array[0]==11 && h.array[0]==11)) //Use ADD method if same sign; Substract Otherwise
+        if((this.array[0]==10 && h.array[0]==10) || (this.array[0]==11 && h.array[0]==11))
+        // if they're the same sign,then add them, otherwise you should subtract them
         {
-            int hi_digits, lo_digits; //Determines digits of each HugeInt
-            if (this.array.length >= h.array.length) //Case 'this' HugeInteger is Larger
+            int higherdigits, lowerdigits;
+
+            if (this.array.length >= h.array.length)
             {
-                hi_digits= this.array.length -1;
-                lo_digits= h.array.length -1;
-                HugeInteger sum = new HugeInteger(hi_digits + 1); //Extra digit allocated in case of final carryover
-                int carryover=0,i; //Create variables for i to iterate and carryover to store varry over values
-                for(i=lo_digits;i>=1;i--) //Iterates sum from least sig to most sig digit of smaller number
-                {
-                    carryover=this.array[i+(hi_digits-lo_digits)]+h.array[i]+carryover; //Stores sum, including carryover bit
-                    sum.array[i+(hi_digits-lo_digits)+1]=carryover%10; //Stores ones digit result of sum
-                    carryover/=10; //Stores tens digit of result of sum, if none then will = 0
+                higherdigits= this.array.length -1;
+                lowerdigits= h.array.length -1;
+                HugeInteger sum = new HugeInteger(higherdigits + 1);
+                int carryover=0,i;
+                for(i=lowerdigits;i>=1;i--){
+                    // go through and sum, then find the actual part of the sum that you want to keep,
+                    // then also find how much you need to carry for later
+                    carryover=this.array[i+(higherdigits-lowerdigits)]+h.array[i]+carryover;
+                    sum.array[i+(higherdigits-lowerdigits)+1]=carryover%10;
+                    carryover/=10;
                 }
-                for(i=hi_digits-lo_digits;i>=1;i--) //Iterates for number of digits large number has more than smaller #
-                {
+                for(i=higherdigits-lowerdigits;i>=1;i--){
+                    // now we have gone through the first lower digits, so go through bigger digits
                     carryover=this.array[i]+carryover;
                     sum.array[i+1]=carryover%10;
                     carryover/=10;
                 }
-                sum.array[0]=this.array[0]; //Stores 11 if both neg or 10 if both pos
-                if(carryover==0) //Reduce size of HugeInt array to fit sum
-                {
-                    HugeInteger newSum= new HugeInteger(hi_digits);
+                // get the sign of the addition, should be positive in this case.
+                sum.array[0]=this.array[0];
+                if(carryover==0){
+                    HugeInteger newSum= new HugeInteger(higherdigits);
                     newSum.array[0]=sum.array[0];
-                    for(i=1;i<=hi_digits;i++)
+                    for(i=1;i<=higherdigits;i++)
                     {
                         newSum.array[i]=sum.array[i+1];
                     }
                     return newSum;
                 }
-                sum.array[1]=carryover; //Sign equals the sign of the 2 numbers added together
+                sum.array[1]=carryover;
                 return sum;
             }
-            else //Other case: integer 'h' is larger than 'this'. Same exact algorithm and implementation as above.
-            {
-                hi_digits= h.array.length -1;
-                lo_digits=this.array.length -1;
-                HugeInteger sum = new HugeInteger(hi_digits + 1);
+            else {
+                // in this case, the second number is larger, but the same algorithm as before
+                higherdigits= h.array.length -1;
+                lowerdigits=this.array.length -1;
+                HugeInteger sum = new HugeInteger(higherdigits + 1);
                 int carryover=0,i;
-                for(i=lo_digits;i>=1;i--)
+                for(i=lowerdigits;i>=1;i--)
                 {
-                    carryover=h.array[i+(hi_digits-lo_digits)]+this.array[i]+carryover;
-                    sum.array[i+(hi_digits-lo_digits)+1]=carryover%10;
+                    carryover=h.array[i+(higherdigits-lowerdigits)]+this.array[i]+carryover;
+                    sum.array[i+(higherdigits-lowerdigits)+1]=carryover%10;
                     carryover/=10;
                 }
-                for(i=hi_digits-lo_digits;i>=1;i--)
+                for(i=higherdigits-lowerdigits;i>=1;i--)
                 {
                     carryover=h.array[i]+carryover;
                     sum.array[i+1]=carryover%10;
@@ -115,9 +118,9 @@ public class HugeInteger{
                 sum.array[0]=this.array[0];
                 if(carryover==0)
                 {
-                    HugeInteger newSum= new HugeInteger(hi_digits);
+                    HugeInteger newSum= new HugeInteger(higherdigits);
                     newSum.array[0]=sum.array[0];
-                    for(i=1;i<=hi_digits;i++)
+                    for(i=1;i<=higherdigits;i++)
                     {
                         newSum.array[i]=sum.array[i+1];
                     }
@@ -128,25 +131,24 @@ public class HugeInteger{
             }
 
         }
-        else //Case that one integer is postive and another negative
-        {
-            if(this.array[0]==11) //Case: this integer is negative
-            {
-                this.array[0]=10; //Change sign to positive and subtract
+        else{
+
+            // this means one integer is positive and the other is negative, so subtract
+            // find the appropriate subtraction.
+            if(this.array[0]==11){
+                this.array[0]=10;
                 return h.subtract(this);
             }
-            else if(h.array[0]==11) //Case: h integer is negative
-            {
-                h.array[0]=10; //Change to positive and subtract
+            else if(h.array[0]==11){
+                h.array[0]=10;
                 return this.subtract(h);
             }
             else
                 return this;
         }
-
     }
 
-    //METHOD 2: SUBSTRACT HugeIntegers
+    // subtract two huge integers and return the huge integer that is the result
     public HugeInteger subtract(HugeInteger h)
     {
         if(this.array[0]==10 && h.array[0]==10) //CASE 0: POS - POS
@@ -169,7 +171,7 @@ public class HugeInteger{
                         // see how many digits we have to borrow from
                         while(this.array[i+digitdiff-counter]==0){
 
-                            this.array[i+digitdiff-counter]=9; //After borrowing process this digit will ultimately become 9 (10, then 1  borrowed to lead to 9)
+                            this.array[i+digitdiff-counter]=9;
                             counter++;
                         }
                         this.array[i+digitdiff-counter]-=1;

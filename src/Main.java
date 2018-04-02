@@ -27,10 +27,10 @@ public class Main {
         HugeInteger num5 = new HugeInteger("-3");
         HugeInteger num6;
 
-        num6 = num4.subtract(num5);
 
         System.out.println (" Number 4: " + num4.toString());
         System.out.println (" Number 5: " + num5.toString());
+        num6 = num4.subtract(num5);
 
         System.out.println ("subtract 4 & 5: " + num6.toString());
 
