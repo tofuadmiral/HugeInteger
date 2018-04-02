@@ -1,7 +1,7 @@
 public class Main {
 
     public static void main(String[] args) {
-        HugeInteger num1 = new HugeInteger(2);
+        HugeInteger num1 = new HugeInteger(277);
         HugeInteger num2 = new HugeInteger("-3");
 
         System.out.println (" Number 1: " + num1.toString());
