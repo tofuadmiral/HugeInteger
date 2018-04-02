@@ -148,7 +148,25 @@ public class HugeInteger {
             return this.add(h);
         }
 
-        // case this isn't negative but other is
+        // case this is negative, other is too
+        // thus effectively taking second number and subtracting from it THIS
+
+        if(this.isNegative && h.isNegative){
+            return h.subtract(this);
+        }
+
+        // case this is negative, and other isn't
+        // i.e we're effectively adding them tgt
+
+        if(this.isNegative && !h.isNegative){
+            HugeInteger temp = new HugeInteger();
+            temp = this;
+            temp.isNegative = false;
+            // since taking more away from negative
+            temp = temp.add(h);
+            temp.isNegative = true;
+            return temp;
+        }
 
         return new HugeInteger(3);
 
@@ -163,10 +181,36 @@ public class HugeInteger {
     public int compareTo(HugeInteger h){
         // compare two huge integers, this and h, 0 means equal, 1 means this is larger, -1 means h is larger
         if(this.numDigits>h.numDigits) {
-            return 1; // automatically means it's larger
+            if(this.isNegative){
+                // then this must be smaller bc negative and more digits so more negative either way
+                return -1;
+            }
+            else{
+                // must be bigger bc more digits and not negative
+                return 1;
+            }
         }
-        else
-            return -1;
+        else if(this.numDigits<h.numDigits){
+            // that means h has more digits
+            if (h.isNegative){
+                return 1; // more digits and negative so must be smaller
+            }
+            else{
+                return -1; // h more digits but not negative so must be larger
+            }
+        }
+        else{
+            // equal digits
+            if(h.isNegative && !this.isNegative){
+                // same digits but h is negative therefore this bigger
+                return 1;
+            }
+            else if (!h.isNegative && this.isNegative) {
+                // same digits but this is negative so H must be smaller
+                return -1;
+            }
+        }
+
     } // end compareTo
 
     public String toString(){

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57d4365a-470e-4b9e-a4fe-55c2be0a9d3b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/HugeInteger.java" afterPath="$PROJECT_DIR$/src/HugeInteger.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -18,10 +17,10 @@
       <file leaf-file-name="HugeInteger.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/HugeInteger.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2700">
-              <caret line="150" column="19" lean-forward="true" selection-start-line="150" selection-start-column="19" selection-end-line="150" selection-end-column="19" />
+            <state relative-caret-position="563">
+              <caret line="210" column="13" lean-forward="true" selection-start-line="210" selection-start-column="13" selection-end-line="210" selection-end-column="13" />
               <folding>
-                <element signature="e#0#6687#0" expanded="true" />
+                <element signature="e#0#8189#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -281,12 +280,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home/lib/src.zip!/java.base/java/lang/Object.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-823">
+          <caret line="253" column="54" lean-forward="false" selection-start-line="253" selection-start-column="54" selection-end-line="253" selection-end-column="54" />
+          <folding>
+            <element signature="e#10225#10226#0" expanded="true" />
+            <element signature="e#10308#10309#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/HugeInteger.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2700">
-          <caret line="150" column="19" lean-forward="true" selection-start-line="150" selection-start-column="19" selection-end-line="150" selection-end-column="19" />
+        <state relative-caret-position="563">
+          <caret line="210" column="13" lean-forward="true" selection-start-line="210" selection-start-column="13" selection-end-line="210" selection-end-column="13" />
           <folding>
-            <element signature="e#0#6687#0" expanded="true" />
+            <element signature="e#0#8189#0" expanded="true" />
           </folding>
         </state>
       </provider>
